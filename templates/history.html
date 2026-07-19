@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis History - Car Damage Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-history me-2"></i>Analysis History
+            </h1>
+            <a href="{{ url_for('select_category') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>New Analysis
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if analyses %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Image</th>
+                                <th>Date</th>
+                                <th>Car Category</th>
+                                <th>Damage Type</th>
+                                <th>Severity</th>
+                                <th>Confidence</th>
+                                <th>Estimated Cost</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for analysis in analyses %}
+                            <tr>
+                                <td>
+                                    <img src="{{ url_for('static', filename='uploads/' + analysis.image_path) }}" 
+                                         alt="Damage" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                </td>
+                                <td>
+                                    <div>{{ analysis.created_at }}</div>
+                                    <small class="text-muted">{{ analysis.created_at }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary text-capitalize">{{ analysis.car_category }}</span>
+                                </td>
+                                <td class="text-capitalize">{{ analysis.damage_type.replace('_', ' ') }}</td>
+                                <td>
+                                    {% set severity_colors = {'low': 'success', 'medium': 'warning', 'high': 'danger'} %}
+                                    <span class="badge bg-{{ severity_colors.get(analysis.severity, 'secondary') }} text-capitalize">
+                                        {{ analysis.severity }}
+                                    </span>
+                                </td>
+                                <td>{{ "%.1f"|format(analysis.confidence * 100) }}%</td>
+                                <td>
+                                    <strong class="text-success">${{ "%.2f"|format(analysis.estimated_cost) }}</strong>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('results', analysis_id=analysis.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-chart-bar me-2"></i>Analysis Summary
+                </h5>
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <h3 class="text-primary">{{ analyses|length }}</h3>
+                        <p class="text-muted mb-0">Total Analyses</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h3 class="text-success">${{ "%.2f"|format(analyses|sum(attribute='estimated_cost')) }}</h3>
+                        <p class="text-muted mb-0">Total Estimated Costs</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h3 class="text-info">{{ "%.1f"|format((analyses|sum(attribute='confidence') / analyses|length) * 100) }}%</h3>
+                        <p class="text-muted mb-0">Average Confidence</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        {% set most_common_damage = analyses|groupby('damage_type')|list|sort(attribute='1')|reverse|first %}
+                        <h3 class="text-warning text-capitalize">{{ most_common_damage[0].replace('_', ' ') if most_common_damage else 'N/A' }}</h3>
+                        <p class="text-muted mb-0">Most Common Damage</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-history fa-4x text-muted mb-4"></i>
+                <h3>No Analysis History</h3>
+                <p class="text-muted mb-4">You haven't performed any damage analyses yet.</p>
+                <a href="{{ url_for('select_category') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>Start Your First Analysis
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

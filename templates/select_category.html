@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Select Car Category - Car Damage Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Select Car Category</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-car fa-3x text-primary mb-3"></i>
+                    <h2 class="card-title">Select Your Car Category</h2>
+                    <p style="color: #000;">Choose the category that best matches your vehicle. This affects the repair cost calculation.</p>
+                </div>
+                
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card category-card h-100" onclick="selectCategory('economy')">
+                                <div class="card-body text-center">
+                                    <input type="radio" name="category" value="economy" id="economy" class="d-none">
+                                    <i class="fas fa-car fa-3x text-info mb-3"></i>
+                                    <h5 class="card-title">Economy</h5>
+                                    <p class="card-text">
+                                        Basic vehicles, compact cars, budget-friendly models
+                                    </p>
+                                    <div class="cost-multiplier">
+                                        <span class="badge bg-info">Base Cost (1.0x)</span>
+                                    </div>
+                                    <div class="examples mt-2">
+                                        <small class="text-muted">
+                                            Examples: Honda Civic, Toyota Corolla, Nissan Versa
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card category-card h-100" onclick="selectCategory('mid-range')">
+                                <div class="card-body text-center">
+                                    <input type="radio" name="category" value="mid-range" id="mid-range" class="d-none">
+                                    <i class="fas fa-car fa-3x text-warning mb-3"></i>
+                                    <h5 class="card-title">Mid-Range</h5>
+                                    <p class="card-text">
+                                        Mid-size sedans, SUVs, popular family vehicles
+                                    </p>
+                                    <div class="cost-multiplier">
+                                        <span class="badge bg-warning">Higher Cost (1.5x)</span>
+                                    </div>
+                                    <div class="examples mt-2">
+                                        <small class="text-muted">
+                                            Examples: Honda Accord, Toyota Camry, Ford Explorer
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card category-card h-100" onclick="selectCategory('premium')">
+                                <div class="card-body text-center">
+                                    <input type="radio" name="category" value="premium" id="premium" class="d-none">
+                                    <i class="fas fa-car fa-3x text-danger mb-3"></i>
+                                    <h5 class="card-title">Premium</h5>
+                                    <p class="card-text">
+                                        Luxury vehicles, sports cars, high-end models
+                                    </p>
+                                    <div class="cost-multiplier">
+                                        <span class="badge bg-danger">Premium Cost (2.5x)</span>
+                                    </div>
+                                    <div class="examples mt-2">
+                                        <small class="text-muted">
+                                            Examples: BMW, Mercedes, Audi, Lexus
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg" id="continueBtn" disabled>
+                            <i class="fas fa-arrow-right me-2"></i>Continue to Upload
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-lg-8 mx-auto">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Cost Calculation:</strong> The repair cost is calculated based on the damage type, severity, and your selected car category. Premium vehicles typically have higher repair costs due to specialized parts and labor requirements.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function selectCategory(category) {
+    // Remove previous selections
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Select current category
+    document.getElementById(category).checked = true;
+    document.querySelector(`#${category}`).closest('.category-card').classList.add('selected');
+    
+    // Enable continue button
+    document.getElementById('continueBtn').disabled = false;
+}
+
+// Add click handlers for category cards
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const radio = this.querySelector('input[type="radio"]');
+            selectCategory(radio.value);
+        });
+    });
+});
+</script>
+
+<style>
+.category-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.category-card.selected {
+    border-color: #0d6efd;
+    background-color: #f8f9fa;
+}
+
+.cost-multiplier {
+    margin-top: 10px;
+}
+
+.examples {
+    font-size: 0.85em;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Car Damage Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center">
+        <div class="hero-section py-5">
+            <h1 class="display-4 fw-bold text-primary mb-4">
+                <i class="fas fa-car-crash me-3"></i>
+                Car Damage Detection
+            </h1>
+            <p class="lead mb-4">
+                AI-powered system to detect car damage and estimate repair costs instantly. 
+                Upload an image of your damaged vehicle and get accurate cost estimates based on damage type and severity.
+            </p>
+            
+            <div class="row mt-5">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card h-100">
+                        <i class="fas fa-camera fa-3x text-primary mb-3"></i>
+                        <h4>Upload Image</h4>
+                        <p>Simply upload a photo of your damaged car's exterior</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card h-100">
+                        <i class="fas fa-brain fa-3x text-success mb-3"></i>
+                        <h4>AI Analysis</h4>
+                        <p>Our CNN model detects damage type and severity automatically</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card h-100">
+                        <i class="fas fa-dollar-sign fa-3x text-warning mb-3"></i>
+                        <h4>Cost Estimate</h4>
+                        <p>Get instant repair cost estimates based on your car category</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-5">
+                {% if current_user_id %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-user-plus me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">How It Works</h2>
+        <div class="row">
+            <div class="col-md-3 text-center mb-4">
+                <div class="step-number">1</div>
+                <h5>Create Account</h5>
+                <p>Register with your email and password</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <div class="step-number">2</div>
+                <h5>Select Car Category</h5>
+                <p>Choose Economy, Mid-range, or Premium</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <div class="step-number">3</div>
+                <h5>Upload Damage Photo</h5>
+                <p>Take a clear photo of the external damage</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <div class="step-number">4</div>
+                <h5>Get Results</h5>
+                <p>View damage analysis and cost estimate</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-lg-10 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Supported Damage Types</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Dents (Low, Medium, High)</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Scratches (Surface to Deep)</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Cracks (Paint to Body)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Broken Glass (Windows, Lights)</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Rust (Early to Advanced)</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Multiple Damage Detection</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
